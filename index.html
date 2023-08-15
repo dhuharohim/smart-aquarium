@@ -279,7 +279,7 @@
                       </div>
                     </div>
                     <div class="card-body">
-                        <div id="kekeruhanChart"></div>
+                      <div id="kekeruhanChart"></div>
                     </div>
                   </div>
                 </div>
@@ -297,7 +297,7 @@
                       </div>
                     </div>
                     <div class="card-body">
-                        <div id="suhuChart"></div>
+                      <div id="suhuChart"></div>
                     </div>
                   </div>
                 </div>
@@ -356,80 +356,99 @@
     <script src="./assets/js/jquery-3.7.0.js"></script>
     <script>
       $(document).ready(function () {
+        // Panggil fungsi fetchData setiap 2 detik
+        setInterval(fetchData, 2000); // 2000 ms = 2 detik
         let pemberiMakan;
         let pemanasAir;
         let suhu;
         let kekeruhan;
-        $.ajax({
-          url: "https://sgp1.blynk.cloud/external/api/get?token=SjAIj52AVrjOQm692qYvHoXqNoGZ1Hyj&v0&v1&v2&v3",
-          success: function (result) {
-            pemberiMakan = result.v2 == 1 ? true : false;
-            pemanasAir = result.v3 == 1 ? true : false;
+        function fetchData() {
+          $.ajax({
+            url: "https://sgp1.blynk.cloud/external/api/get?token=SjAIj52AVrjOQm692qYvHoXqNoGZ1Hyj&v0&v1&v2&v3",
+            success: function (result) {
+              pemberiMakan = result.v2 == 1 ? true : false;
+              pemanasAir = result.v3 == 1 ? true : false;
 
-            suhu = result.v0;
-            kekeruhan = result.v1;
+              suhu = result.v0;
+              kekeruhan = result.v1;
 
-            $("#pemberi-makan").prop("checked", pemberiMakan);
-            $("#pemanas-air").prop("checked", pemanasAir);
+              $("#pemberi-makan").prop("checked", pemberiMakan);
+              $("#pemanas-air").prop("checked", pemanasAir);
 
-            createSuhuChart();
-            createKekeruhanChart();
-          },
-        });
-
-    function createSuhuChart() {
-        const suhuOptions = {
-            chart: {
-                type: 'line' // Tipe grafik
+              createSuhuChart();
+              createKekeruhanChart();
             },
-            series: [{
-                name: 'Suhu Air', // Nama dataset
-                data: [suhu] // Data suhu
-            }],
-            xaxis: {
-                categories: ['Waktu'] // Label sumbu x
-            }
-        };
-        
-        const suhuChart = new ApexCharts(document.querySelector('#suhuChart'), suhuOptions);
-        suhuChart.render();
-    }
+          });
+        }
 
-    function createSuhuChart() {
-        const suhuOptions = {
+        function createSuhuChart() {
+          const suhuOptions = {
             chart: {
-                type: 'line' // Tipe grafik
+              type: "line", // Tipe grafik
             },
-            series: [{
-                name: 'Suhu Air', // Nama dataset
-                data: [suhu] // Data suhu
-            }],
+            series: [
+              {
+                name: "Suhu Air", // Nama dataset
+                data: [suhu], // Data suhu
+              },
+            ],
             xaxis: {
-                categories: ['Waktu'] // Label sumbu x
-            }
-        };
-        
-        const suhuChart = new ApexCharts(document.querySelector('#suhuChart'), suhuOptions);
-        suhuChart.render();
-    }
+              categories: ["Waktu"], // Label sumbu x
+            },
+          };
 
-    function createKekeruhanChart() {
-        const kekeruhanOptions = {
+          const suhuChart = new ApexCharts(
+            document.querySelector("#suhuChart"),
+            suhuOptions
+          );
+          suhuChart.render();
+        }
+
+        function createSuhuChart() {
+          const suhuOptions = {
             chart: {
-                type: 'line' // Tipe grafik
+              type: "line", // Tipe grafik
             },
-            series: [{
-                name: 'Kekeruhan Air', // Nama dataset
-                data: [kekeruhan] // Data suhu
-            }],
+            series: [
+              {
+                name: "Suhu Air", // Nama dataset
+                data: [suhu], // Data suhu
+              },
+            ],
             xaxis: {
-                categories: ['Waktu'] // Label sumbu x
-            }
-        };
-        
-        const kekeruhanChart = new ApexCharts(document.querySelector('#kekeruhanChart'), kekeruhanOptions);
-        kekeruhanChart.render();
-    }
+              categories: ["Waktu"], // Label sumbu x
+            },
+          };
+
+          const suhuChart = new ApexCharts(
+            document.querySelector("#suhuChart"),
+            suhuOptions
+          );
+          suhuChart.render();
+        }
+
+        function createKekeruhanChart() {
+          const kekeruhanOptions = {
+            chart: {
+              type: "line", // Tipe grafik
+            },
+            series: [
+              {
+                name: "Kekeruhan Air", // Nama dataset
+                data: [kekeruhan], // Data suhu
+              },
+            ],
+            xaxis: {
+              categories: ["Waktu"], // Label sumbu x
+            },
+          };
+
+          const kekeruhanChart = new ApexCharts(
+            document.querySelector("#kekeruhanChart"),
+            kekeruhanOptions
+          );
+          kekeruhanChart.render();
+        }
 
         $("#pemberi-makan").on("click", function (event) {
           let checked = event.target.checked == true ? 1 : 0;
