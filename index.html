@@ -260,8 +260,8 @@
       
       let pemberiMakan;
       let pemanasAir;
-      let suhu = null;
-      let kekeruhan = null;
+      let suhu = [];
+      let kekeruhan = [];
       
       function fetchData() {
         $.ajax({
@@ -269,21 +269,25 @@
           success: function (result) {
             pemberiMakan = result.v2 == 1;
             pemanasAir = result.v3 == 1;
-            suhu = result.v0;
-            kekeruhan = result.v1;
+            suhuAir = result.v0;
+            kekeruhanAir = result.v1;
             
             $("#pemberi-makan").prop("checked", pemberiMakan);
             $("#pemanas-air").prop("checked", pemanasAir);
             
+            suhu.push(suhuAir);
+            kekeruhan.push(kekeruhanAir);
             if (suhuChart) {
-              suhuChart.destroy(); // Hancurkan chart jika sudah ada
+              suhuChart.updateSeries([{ name: "Suhu Air", data: suhu }]);
+            } else {
+              createSuhuChart();
             }
-            createSuhuChart();
             
             if (kekeruhanChart) {
-              kekeruhanChart.destroy(); // Hancurkan chart jika sudah ada
+              kekeruhanChart.updateSeries([{ name: "Kekeruhan Air", data: kekeruhan }]);
+            } else {
+              createKekeruhanChart();
             }
-            createKekeruhanChart();
           },
         });
       }
